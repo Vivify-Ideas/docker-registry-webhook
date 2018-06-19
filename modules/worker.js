@@ -32,3 +32,5 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch) => {
   utils.logSuccess(successMsg);
   return Promise.resolve(successMsg);
 };
+
+module.exports = { execute };
