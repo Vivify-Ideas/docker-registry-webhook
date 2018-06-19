@@ -6,6 +6,13 @@
   "repository": "git@github.com:vivifyideas/docker-registry-webhook.git",
   "author": "Aleksandar Babic <alekski64@icloud.com>",
   "license": "MIT",
+  "prettier": {
+    "printWidth": 100,
+    "bracketSpacing": true,
+    "singleQuote": true,
+    "semi": true,
+    "arrowParens": "always"
+  },
   "devDependencies": {
     "prettier": "1.13.5"
   }
