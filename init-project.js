@@ -1,7 +1,7 @@
 const fs = require('fs');
 const utils = require('./utils');
 
-const initProject = (projectName, repo, branch) => {
+const initProject = (projectName, repo, branch, webhook) => {
   const homedir = require('os').homedir();
   const projectPath = `${homedir}/${projectName}-${branch}`;
 
@@ -19,19 +19,19 @@ const initProject = (projectName, repo, branch) => {
   utils.logData(`Checkouting to ${branch}`);
   utils.execOrThrow(gitCheckoutCommand, gitCheckoutError);
 
-  utils.writeToJson('./servers-list.json', projectName, branch, repo);
+  utils.writeToJson('./servers-list.json', projectName, branch, webhook);
   utils.logSuccess('Project has been initialized!');
 };
 
 const run = () => {
   const args = process.argv;
 
-  if (args.length !== 5) {
-    const msg = 'Usage: node init-project.js projectName repoUrl branch';
+  if (args.length !== 6) {
+    const msg = 'Usage: node init-project.js repoName repoUrl repoBranch webhookUrl';
     return utils.logError(msg);
   }
 
-  initProject(args[2], args[3], args[4]);
+  initProject(args[2], args[3], args[4], args[5]);
 };
 
 run();
