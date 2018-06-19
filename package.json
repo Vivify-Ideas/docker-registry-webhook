@@ -1,0 +1,12 @@
+{
+  "name": "docker-registry-webhook",
+  "version": "1.0.0",
+  "description": "Github Webhook handler for our custom docker registry.",
+  "main": "server.js",
+  "repository": "git@github.com:vivifyideas/docker-registry-webhook.git",
+  "author": "Aleksandar Babic <alekski64@icloud.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "1.13.5"
+  }
+}
