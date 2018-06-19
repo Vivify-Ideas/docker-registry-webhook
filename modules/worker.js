@@ -10,7 +10,7 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch) => {
     utils.execOrThrow(gitPull);
 
     const dockerImageName = `${repoName}:${branch}`;
-    const dockerBuild = `cd ${projectPath}; docker build --no-cache -t ${dockerImageName} -f ${dockerFileName} .`;
+    const dockerBuild = `cd ${projectPath}; docker build -t ${dockerImageName} -f ${dockerFileName} .`;
     const dockerBuildError = 'Error while building docker image.';
     utils.logData(`Building docker image ${dockerImageName}.`);
     utils.execOrThrow(dockerBuild);
