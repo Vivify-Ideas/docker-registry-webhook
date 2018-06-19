@@ -1,4 +1,4 @@
-var fs = require('fs');
+const fs = require('fs');
 const utils = require('./utils');
 
 const initProject = (projectName, repo, branch) => {
