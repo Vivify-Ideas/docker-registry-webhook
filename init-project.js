@@ -30,7 +30,7 @@ const run = () => {
     return utils.logError(msg);
   }
 
-  initProject(args[2], args[3], args[4], args[5], args[6]);
+  initProject(...args.slice(2));
 };
 
 run();
