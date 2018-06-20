@@ -25,7 +25,7 @@ const processWebhook = (webhookPayload, res) => {
         webhookPayload.repositoryBranch
       )
       .then((output) => {
-        utils.logSuccess(`Webhook has been processed. OUTPUT: ${output}`);
+        utils.logSuccess(`Webhook has been processed.`);
         res.end(output);
       })
       .catch((err) => {
