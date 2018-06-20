@@ -5,7 +5,6 @@ module.exports = {
     switch (url) {
       case 'github.com':
         return new GithubParser();
-        break;
       default:
         throw new Error('Unknown parser requested.');
     }
