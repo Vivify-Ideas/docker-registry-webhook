@@ -53,11 +53,26 @@ const writeToJson = (jsonFile, projectName, branch, repo) => {
   return fs.writeFileSync(jsonFile, JSON.stringify(serversList, null, 4));
 };
 
+const getGitServiceFromUrl = (url) => {
+  return url.includes('https://')
+    ? url
+        .split('://')
+        .pop()
+        .split('/')
+        .shift()
+    : url
+        .split('git@')
+        .pop()
+        .split(':')
+        .shift();
+};
+
 module.exports = {
   logSuccess,
   logData,
   logError,
   execBashAndLog,
   execOrThrow,
-  writeToJson
+  writeToJson,
+  getGitServiceFromUrl
 };
