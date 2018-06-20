@@ -2,14 +2,15 @@ const utils = require('./../utils');
 const serversList = require('./../servers-list.json');
 const REGISTRY_URL = process.env.REGISTRY_URL || 'registry.vivifyideas.com';
 
-const execute = (projectPath, namespace, dockerFileName, repoName, branch) => {
+const execute = (projectPath, namespace, dockerFileName, repoName, branch, suffix = '') => {
+  let dockerImageName = '';
   try {
     const gitPull = `cd ${projectPath}; git pull`;
     const gitPullError = 'Error while pulling from git repository.';
     utils.logData(`Git pull on repo ${repoName} at branch ${branch}.`);
     utils.execOrThrow(gitPull);
 
-    const dockerImageName = `${repoName}:${branch}`;
+    dockerImageName = suffix === '' ? `${repoName}:${branch}` : `${repoName}-${suffix}:${branch}`;
     const dockerBuild = `cd ${projectPath}; docker build --no-cache -t ${dockerImageName} -f ${dockerFileName} .`;
     const dockerBuildError = 'Error while building docker image.';
     utils.logData(`Building docker image ${dockerImageName}.`);
@@ -28,7 +29,7 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch) => {
     return Promise.reject(e);
   }
 
-  const successMsg = 'Worker finished all commands successfully.';
+  const successMsg = `Worker finished all commands successfully on image ${dockerImageName}.`;
   utils.logSuccess(successMsg);
   return Promise.resolve(successMsg);
 };

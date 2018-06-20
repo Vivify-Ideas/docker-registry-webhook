@@ -33,6 +33,31 @@ const processWebhook = (webhookPayload, res) => {
         res.end(err);
       });
   }
+
+  let workerPromises = [];
+  project.dockerFiles.forEach((dockerFile) =>
+    workerPromises.push(
+      worker.execute(
+        projectPath,
+        project.namespace,
+        dockerFile.dockerFileName,
+        webhookPayload.repositoryName,
+        webhookPayload.repositoryBranch,
+        dockerFile.suffix
+      )
+    )
+  );
+
+  Promise.all(workerPromises)
+    .then((output) => {
+      const msg = 'Webhook has been processed.';
+      utils.logSuccess(msg);
+      res.end(msg);
+    })
+    .catch((err) => {
+      utils.logError(`Error while processing webhook. ${err.toString()}`);
+      res.end(err);
+    });
 };
 
 module.exports = { processWebhook };
