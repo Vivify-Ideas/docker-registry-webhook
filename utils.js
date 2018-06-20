@@ -41,11 +41,14 @@ const execOrThrow = (command, errorMessage) => {
 };
 
 const writeToJson = (jsonFile, projectName, branch, repo) => {
-  if (!serversList[`${projectName}`]) {
-    serversList[`${projectName}`] = {};
-  }
+  const obj = {
+    projectName,
+    branches: {}
+  };
 
-  serversList[`${projectName}`][`${branch}`] = repo;
+  obj.branches[`${branch}`] = repo;
+
+  serversList.push(obj);
 
   return fs.writeFileSync(jsonFile, JSON.stringify(serversList, null, 4));
 };
