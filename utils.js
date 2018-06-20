@@ -40,16 +40,32 @@ const execOrThrow = (command, errorMessage) => {
   return output;
 };
 
-const writeToJson = (jsonFile, projectName, branch, repo) => {
+const writeToJson = (jsonFile, projectName, branch, webhook, namespace) => {
+  if (getProjectByName(projectName)) {
+    return addBranchToServerList(jsonFile, projectName, branch, webhook);
+  }
+
   const obj = {
     projectName,
+    namespace,
     branches: {}
   };
 
-  obj.branches[`${branch}`] = repo;
+  obj.branches[`${branch}`] = webhook;
 
   serversList.push(obj);
 
+  return fs.writeFileSync(jsonFile, JSON.stringify(serversList, null, 4));
+};
+
+const addBranchToServerList = (jsonFile, project, branch, webhook) => {
+  const serversListLength = serversList.length;
+  for (let i = 0; i < serversListLength; ++i) {
+    if (serversList[i].projectName === project) {
+      serversList[i].branches[`${branch}`] = webhook;
+      break;
+    }
+  }
   return fs.writeFileSync(jsonFile, JSON.stringify(serversList, null, 4));
 };
 
@@ -67,6 +83,10 @@ const getGitServiceFromUrl = (url) => {
         .shift();
 };
 
+const getProjectByName = (name) => serversList.find((p) => p.projectName === name);
+
+const getProjectPath = (name, branch) => `${require('os').homedir()}/${name}-${branch}`;
+
 module.exports = {
   logSuccess,
   logData,
@@ -74,5 +94,7 @@ module.exports = {
   execBashAndLog,
   execOrThrow,
   writeToJson,
-  getGitServiceFromUrl
+  getGitServiceFromUrl,
+  getProjectByName,
+  getProjectPath
 };

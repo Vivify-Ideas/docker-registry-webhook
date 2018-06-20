@@ -1,9 +1,8 @@
 const fs = require('fs');
 const utils = require('./utils');
 
-const initProject = (projectName, repo, branch, webhook) => {
-  const homedir = require('os').homedir();
-  const projectPath = `${homedir}/${projectName}-${branch}`;
+const initProject = (projectName, repo, branch, webhook, namespace) => {
+  const projectPath = utils.getProjectPath(projectName, branch);
 
   if (fs.existsSync(projectPath)) {
     throw new Error('Project already exists.');
@@ -19,19 +18,19 @@ const initProject = (projectName, repo, branch, webhook) => {
   utils.logData(`Checkouting to ${branch}`);
   utils.execOrThrow(gitCheckoutCommand, gitCheckoutError);
 
-  utils.writeToJson('./servers-list.json', projectName, branch, webhook);
+  utils.writeToJson('./servers-list.json', projectName, branch, webhook, namespace);
   utils.logSuccess('Project has been initialized!');
 };
 
 const run = () => {
   const args = process.argv;
 
-  if (args.length !== 6) {
-    const msg = 'Usage: node init-project.js repoName repoUrl repoBranch webhookUrl';
+  if (args.length !== 7) {
+    const msg = 'Usage: node init-project.js repoName repoUrl repoBranch webhookUrl namespace';
     return utils.logError(msg);
   }
 
-  initProject(args[2], args[3], args[4], args[5]);
+  initProject(args[2], args[3], args[4], args[5], args[6]);
 };
 
 run();
