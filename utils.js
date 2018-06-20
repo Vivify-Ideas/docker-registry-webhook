@@ -3,16 +3,20 @@ const fs = require('fs');
 
 const serversList = require('./servers-list.json');
 
+const logTimestamp = () => {
+  return `[${new Date().toUTCString()}]`;
+};
+
 const logSuccess = (message) => {
-  console.log('\x1b[32m', message, '\x1b[0m');
+  console.log('\x1b[32m', `${logTimestamp()} ${message}`, '\x1b[0m');
 };
 
 const logData = (message) => {
-  console.log('\x1b[37m', message, '\x1b[0m');
+  console.log('\x1b[37m', `${logTimestamp()} ${message}`, '\x1b[0m');
 };
 
 const logError = (message) => {
-  console.log('\033[31m', message, '\x1b[0m');
+  console.log('\033[31m', `${logTimestamp()} ${message}`, '\x1b[0m');
 };
 
 const execBashAndLog = (command) => {
