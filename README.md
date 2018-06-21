@@ -2,12 +2,12 @@
 
 ### How does it work ?
 
-1.  Git hosting service (github, gitlab, etc..) sends Push Event webhook to this server
-2.  Server detects what service is it and calls corresponding git service payload parser
-3.  Server checks if repository from webhook exists in `servers-list.json` and on filesystem
-4.  If repository exists, server will build Docker image, tag and push it to given Docker registry (reading from env variable REGISTRY_URL or fallback to `registry.vivifyideas.com`)
-5.  If everything was done successfully, server will send outbound webhook to given URL for specific branch (also in `servers-list.json`)
-    > Multiple Dockerfiles projects are also supported, check example `servers-list.json` below.
+1. Git hosting service (github, gitlab, etc..) sends Push Event webhook to this server
+2. Server detects what service is it and calls corresponding git service payload parser
+3. Server checks if repository from webhook exists in `servers-list.json` and on filesystem
+4. If repository exists, server will build Docker image, tag and push it to given Docker registry (reading from env variable REGISTRY_URL or fallback to `registry.vivifyideas.com`)
+5. If everything was done successfully, server will send outbound webhook to given URL for specific branch (also in `servers-list.json`)
+> Multiple Dockerfiles projects are also supported, check example `servers-list.json` below.
 
 ## Example of outbound webhook payload with single Dockerfile
 
