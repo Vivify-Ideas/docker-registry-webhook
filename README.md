@@ -11,7 +11,7 @@
   
 > Docker builds/pushes are done asynchronous, so building project with multiple Dockerfiles is really fast.
   
-> For example, we dropped build time from ~25 minutes to ~5 minutes on our project [VivifyScrum](https://www.vivifyscrum.com/).
+> For example, when we migrated from Dockerhub to this processer we dropped build time from ~25 minutes to ~5 minutes on our project [VivifyScrum](https://www.vivifyscrum.com/).
 
 ## Example of outbound webhook payload with single Dockerfile
 
