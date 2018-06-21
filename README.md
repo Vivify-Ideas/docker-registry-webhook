@@ -8,6 +8,10 @@
 4. If repository exists, server will build Docker image, tag and push it to given Docker registry (reading from env variable REGISTRY_URL or fallback to `registry.vivifyideas.com`)
 5. If everything was done successfully, server will send outbound webhook to given URL for specific branch (also in `servers-list.json`)
 > Multiple Dockerfiles projects are also supported, check example `servers-list.json` below.
+  
+> Docker builds/pushes are done asynchronous, so building project with multiple Dockerfiles is really fast.
+  
+> For example, we dropped build time from ~25 minutes to ~5 minutes on our project [VivifyScrum](https://www.vivifyscrum.com/).
 
 ## Example of outbound webhook payload with single Dockerfile
 
