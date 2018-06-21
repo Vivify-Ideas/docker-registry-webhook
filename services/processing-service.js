@@ -26,13 +26,14 @@ const processWebhook = (webhookPayload, res) => {
         webhookPayload.repositoryBranch
       )
       .then((output) => {
-        utils.logSuccess(`Webhook has been processed.`);
-        res.end(output);
+        const msg = 'Webhook has been processed.';
+        utils.logSuccess(msg);
         notifier.notify(
           project,
           [output.dockerImageName],
           project.branches[`${webhookPayload.repositoryBranch}`]
         );
+        res.end(msg);
       })
       .catch((err) => {
         utils.logError(`Error while processing webhook. ${err.toString()}`);

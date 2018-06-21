@@ -5,6 +5,7 @@ const utils = require('./../utils');
 const REGISTRY_URL = process.env.REGISTRY_URL || 'registry.vivifyideas.com';
 
 const notify = (project, images, uri) => {
+  utils.logData(`Sending notification to ${uri}.`);
   const options = {
     ...url.parse(uri),
     method: 'POST',
