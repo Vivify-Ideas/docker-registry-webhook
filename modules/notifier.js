@@ -4,7 +4,7 @@ const url = require('url');
 const utils = require('./../utils');
 const REGISTRY_URL = process.env.REGISTRY_URL || 'registry.vivifyideas.com';
 
-const notify = (project, dockerImageName, uri) => {
+const notify = (project, images, uri) => {
   const options = {
     ...url.parse(uri),
     method: 'POST',
@@ -19,12 +19,18 @@ const notify = (project, dockerImageName, uri) => {
       utils.logSuccess(`Got response from Notify hook (${uri}) : ${payload}`);
     });
   });
+
+  const imagesDetails = images.map((image) => {
+    return {
+      name: image,
+      registryUrl: REGISTRY_URL,
+      fullUrl: `${REGISTRY_URL}/${image}`
+    };
+  });
   req.write(
     JSON.stringify({
       ...project,
-      dockerImageName,
-      registryUrl: REGISTRY_URL,
-      fullUrl: `${REGISTRY_URL}/${dockerImageName}`
+      images: imagesDetails
     })
   );
   req.end();

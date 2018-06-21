@@ -2,6 +2,7 @@ const fs = require('fs');
 const utils = require('./../utils');
 const serversList = require('./../servers-list.json');
 const worker = require('./../modules/worker');
+const notifier = require('./../modules/notifier');
 
 const processWebhook = (webhookPayload, res) => {
   utils.logData('Starting webhook processing..');
@@ -27,14 +28,19 @@ const processWebhook = (webhookPayload, res) => {
       .then((output) => {
         utils.logSuccess(`Webhook has been processed.`);
         res.end(output);
+        notifier.notify(
+          project,
+          [output.dockerImageName],
+          project.branches[`${webhookPayload.repositoryBranch}`]
+        );
       })
       .catch((err) => {
-        utils.logError('Error while processing webhook.', err);
-        res.end(err);
+        utils.logError(`Error while processing webhook. ${err.toString()}`);
+        res.end(err.toString());
       });
   }
 
-  let workerPromises = [];
+  const workerPromises = [];
   project.dockerFiles.forEach((dockerFile) =>
     workerPromises.push(
       worker.execute(
@@ -51,12 +57,15 @@ const processWebhook = (webhookPayload, res) => {
   Promise.all(workerPromises)
     .then((output) => {
       const msg = 'Webhook has been processed.';
+      const images = [];
+      output.forEach((i) => images.push(i.dockerImageName));
+      notifier.notify(project, images, project.branches[`${webhookPayload.repositoryBranch}`]);
       utils.logSuccess(msg);
       res.end(msg);
     })
     .catch((err) => {
       utils.logError(`Error while processing webhook. ${err.toString()}`);
-      res.end(err);
+      res.end(err.toString());
     });
 };
 
