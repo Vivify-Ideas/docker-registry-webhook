@@ -76,7 +76,7 @@ const addBranchToServerList = (jsonFile, project, branch, webhook) => {
 const getGitServiceFromUrl = (url) => {
   return url.includes('https://')
     ? url
-        .split('://')
+        .split('://api.')
         .pop()
         .split('/')
         .shift()
