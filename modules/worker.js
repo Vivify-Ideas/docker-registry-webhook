@@ -1,4 +1,5 @@
 const utils = require('./../utils');
+const spawn = require('child_process').spawn;
 const serversList = require('./../servers-list.json');
 const REGISTRY_URL = process.env.REGISTRY_URL || 'registry.vivifyideas.com';
 
@@ -7,32 +8,35 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch, suffi
     let dockerImageName = '';
     try {
       const gitPull = `cd ${projectPath}; git pull`;
-      const gitPullError = 'Error while pulling from git repository.';
-      utils.logData(`Git pull on repo ${repoName} at branch ${branch}.`);
-      utils.execOrThrow(gitPull);
-
       dockerImageName = suffix === '' ? `${repoName}:${branch}` : `${repoName}-${suffix}:${branch}`;
       const dockerBuild = `cd ${projectPath}; docker build --no-cache -t ${dockerImageName} -f ${dockerFileName} .`;
-      const dockerBuildError = 'Error while building docker image.';
-      utils.logData(`Building docker image ${dockerImageName}.`);
-      utils.execOrThrow(dockerBuild);
-
       const dockerTag = `docker tag ${dockerImageName} ${REGISTRY_URL}/${namespace}/${dockerImageName}`;
-      const dockerTagError = 'Error while tagging docker image.';
-      utils.logData('Tagging docker image.');
-      utils.execOrThrow(dockerTag);
-
       const dockerPush = `docker push ${REGISTRY_URL}/${namespace}/${dockerImageName}`;
-      const dockerPushError = 'Error while pushing docker image.';
-      utils.logData(`Pushing image ${dockerImageName} to docker repo.`);
-      utils.execOrThrow(dockerPush);
+
+      const child = spawn(`${gitPull} && ${dockerBuild} && ${dockerTag} && ${dockerPush}`, {
+        shell: true
+      });
+
+      child.stderr.on('data', (data) => {
+        utils.logError(`STDERR: ${data.toString()}`);
+      });
+
+      child.stdout.on('data', (data) => {
+        utils.logData(`STDOUT: ${data.toString()}`);
+      });
+
+      child.on('exit', (exitCode) => {
+        const msg = 'Child exited with code: ' + exitCode;
+        if (exitCode === 0) {
+          const successMsg = `Worker finished all commands successfully on image ${dockerImageName}.`;
+          utils.logSuccess(successMsg);
+          return resolve({ message: successMsg, dockerImageName });
+        }
+        return reject(msg);
+      });
     } catch (e) {
       return reject(e);
     }
-
-    const successMsg = `Worker finished all commands successfully on image ${dockerImageName}.`;
-    utils.logSuccess(successMsg);
-    return resolve({ message: successMsg, dockerImageName });
   });
 };
 
