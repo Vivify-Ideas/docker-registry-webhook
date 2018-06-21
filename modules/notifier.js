@@ -29,10 +29,14 @@ const notify = (project, images, uri) => {
     };
   });
   req.write(
-    JSON.stringify({
-      ...project,
-      images: imagesDetails
-    })
+    JSON.stringify(
+      {
+        ...project,
+        images: imagesDetails
+      },
+      null,
+      4
+    )
   );
   req.end();
 
