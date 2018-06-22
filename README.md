@@ -114,7 +114,7 @@
 ]
 ```
 
-- Branches property tells what git repositories branches should server build
+- Branches property tells what git repositories branches should server build (branch value is webhook where notification should be sent on successful build)
 - If exists, `dockerFiles` property tells how to handle projects with multiple Dockerfiles
 
 ## How to initialize projects ?
