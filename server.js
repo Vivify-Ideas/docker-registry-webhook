@@ -25,8 +25,12 @@ server.on('request', (req, res) => {
     return methodNotAllowed(res);
   }
 
-  req.on('data', (data) => {
-    const payload = JSON.parse(data.toString());
+  let bufferPayload = '';
+
+  req.on('data', (chunk) => (bufferPayload += chunk));
+
+  req.on('end', () => {
+    const payload = JSON.parse(bufferPayload.toString());
     const parser = utils.getGitServiceFromUrl(payload.repository.url);
     const parsedWebhookPayload = parserFactory.getParser(parser).parse(payload);
     utils.logSuccess('Parsed Webhook payload.');
