@@ -35,6 +35,10 @@ server.on('request', (req, res) => {
     const parsedWebhookPayload = parserFactory.getParser(parser).parse(payload);
     utils.logSuccess('Parsed Webhook payload.');
     try {
+      const payload = JSON.parse(data.toString());
+      const parser = utils.getGitServiceFromUrl(payload.repository.url);
+      const parsedWebhookPayload = parserFactory.getParser(parser).parse(payload);
+      utils.logSuccess('Parsed Webhook payload.');
       processingService.processWebhook(parsedWebhookPayload, res);
     } catch (e) {
       utils.logError(e.toString());
