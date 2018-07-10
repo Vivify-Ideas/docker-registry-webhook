@@ -5,19 +5,19 @@ const REGISTRY_URL = process.env.REGISTRY_URL || 'registry.vivifyideas.com';
 
 const execute = (projectPath, namespace, dockerFileName, repoName, branch, suffix = '') => {
   return new Promise((resolve, reject) => {
-    const dockerImageName = suffix === '' ? `${repoName}:${branch}` : `${repoName}-${suffix}:${branch}`;
+    const dockerImageName =
+      suffix === '' ? `${repoName}:${branch}` : `${repoName}-${suffix}:${branch}`;
     wipeOldBuilds(dockerImageName);
+    wipeOldBuilds(`${REGISTRY_URL}/${namespace}/${dockerImageName}`);
     try {
       const gitPull = `cd ${projectPath}; git pull`;
       const dockerBuild = `cd ${projectPath}; docker build --no-cache -t ${dockerImageName} -f ${dockerFileName} .`;
       const dockerTag = `docker tag ${dockerImageName} ${REGISTRY_URL}/${namespace}/${dockerImageName}`;
       const dockerPush = `docker push ${REGISTRY_URL}/${namespace}/${dockerImageName}`;
 
-      const child = spawn(
-        `${gitPull} && ${dockerBuild} && ${dockerTag} && ${dockerPush}`, {
-          shell: true
-        }
-      );
+      const child = spawn(`${gitPull} && ${dockerBuild} && ${dockerTag} && ${dockerPush}`, {
+        shell: true
+      });
 
       child.stderr.on('data', (data) => {
         utils.logError(`STDERR: ${data.toString()}`);
@@ -45,7 +45,8 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch, suffi
   });
 };
 
-const wipeOldBuilds = (image) => utils.execBashAndLog(`docker rmi $(docker images -q ${image} | tail -n+2)`);
+const wipeOldBuilds = (image) =>
+  utils.execBashAndLog(`docker rmi $(docker images -q ${image} | tail -n+2)`);
 
 module.exports = {
   execute
