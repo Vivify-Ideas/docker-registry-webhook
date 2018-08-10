@@ -30,6 +30,9 @@ server.on('request', (req, res) => {
   req.on('data', (chunk) => (bufferPayload += chunk));
 
   req.on('end', () => {
+    if (!bufferPayload || utils.isEmptyObj(JSON.parse(bufferPayload))) {
+      return res.end('Empty payload.');
+    }
     const payload = JSON.parse(bufferPayload.toString());
     const parser = utils.getGitServiceFromUrl(payload.repository.url);
     const parsedWebhookPayload = parserFactory.getParser(parser).parse(payload);

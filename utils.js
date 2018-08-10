@@ -74,22 +74,24 @@ const addBranchToServerList = (jsonFile, project, branch, webhook) => {
 };
 
 const getGitServiceFromUrl = (url) => {
-  return url.includes('https://')
-    ? url
-        .split('://')
-        .pop()
-        .split('/')
-        .shift()
-    : url
-        .split('git@')
-        .pop()
-        .split(':')
-        .shift();
+  return url.includes('https://') ?
+    url
+    .split('://')
+    .pop()
+    .split('/')
+    .shift() :
+    url
+    .split('git@')
+    .pop()
+    .split(':')
+    .shift();
 };
 
 const getProjectByName = (name) => serversList.find((p) => p.projectName === name);
 
 const getProjectPath = (name, branch) => `${require('os').homedir()}/${name}-${branch}`;
+
+const isEmptyObj = (obj) => Object.keys(obj).length === 0;
 
 module.exports = {
   logSuccess,
@@ -100,5 +102,6 @@ module.exports = {
   writeToJson,
   getGitServiceFromUrl,
   getProjectByName,
-  getProjectPath
+  getProjectPath,
+  isEmptyObj
 };
