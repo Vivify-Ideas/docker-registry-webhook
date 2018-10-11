@@ -16,7 +16,11 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch, suffi
       const dockerPush = `docker push ${REGISTRY_URL}/${namespace}/${dockerImageName}`;
 
       const child = spawn(`${gitPull} && ${dockerBuild} && ${dockerTag} && ${dockerPush}`, {
-        shell: true
+        shell: true,
+        env: {
+          BUILD_IMAGE: dockerImageName,
+          BUILD_IMAGE_TAG: branch
+        }
       });
 
       child.stderr.on('data', (data) => {
