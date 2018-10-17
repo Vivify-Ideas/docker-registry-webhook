@@ -11,7 +11,7 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch, suffi
     wipeOldBuilds(`${REGISTRY_URL}/${namespace}/${dockerImageName}`);
     try {
       const gitPull = `cd ${projectPath}; git pull`;
-      const dockerBuild = `cd ${projectPath}; docker build --no-cache --build-arg BUILD_IMAGE_TAG=${branch} --build-arg BUILD_IMAGE=${dockerImageName}   -t ${dockerImageName} -f ${dockerFileName} .`;
+      const dockerBuild = `cd ${projectPath}; docker build --no-cache --build-arg BUILD_IMAGE_TAG=${branch} --build-arg BUILD_IMAGE=${dockerImageName} -t ${dockerImageName} -f ${dockerFileName} .`;
       const dockerTag = `docker tag ${dockerImageName} ${REGISTRY_URL}/${namespace}/${dockerImageName}`;
       const dockerPush = `docker push ${REGISTRY_URL}/${namespace}/${dockerImageName}`;
 
