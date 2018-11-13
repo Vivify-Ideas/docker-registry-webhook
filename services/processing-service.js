@@ -23,7 +23,8 @@ const processWebhook = (webhookPayload, res) => {
         project.namespace,
         'Dockerfile',
         webhookPayload.repositoryName,
-        webhookPayload.repositoryBranch
+        webhookPayload.repositoryBranch,
+        project.slackWebhookUrl
       )
       .then((output) => {
         const msg = 'Webhook has been processed.';
@@ -50,6 +51,7 @@ const processWebhook = (webhookPayload, res) => {
         dockerFile.dockerFileName,
         webhookPayload.repositoryName,
         webhookPayload.repositoryBranch,
+        project.slackWebhookUrl,
         dockerFile.suffix
       )
     )
@@ -70,4 +72,6 @@ const processWebhook = (webhookPayload, res) => {
     });
 };
 
-module.exports = { processWebhook };
+module.exports = {
+  processWebhook
+};

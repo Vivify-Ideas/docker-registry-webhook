@@ -1,5 +1,8 @@
 const exec = require('child_process');
 const fs = require('fs');
+const {
+  IncomingWebhook
+} = require('@slack/client');
 
 const serversList = require('./servers-list.json');
 
@@ -93,6 +96,12 @@ const getProjectPath = (name, branch) => `${require('os').homedir()}/${name}-${b
 
 const isEmptyObj = (obj) => Object.keys(obj).length === 0;
 
+const notifySlack = (webhookUrl, text) => {
+  const webhook = new IncomingWebhook(webhookUrl);
+  return new Promise((resolve, reject) =>
+    webhook.send(text, (err, res) => err ? reject(err) : resolve(res)));
+};
+
 module.exports = {
   logSuccess,
   logData,
@@ -103,5 +112,6 @@ module.exports = {
   getGitServiceFromUrl,
   getProjectByName,
   getProjectPath,
-  isEmptyObj
+  isEmptyObj,
+  notifySlack
 };

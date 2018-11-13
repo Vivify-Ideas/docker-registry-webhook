@@ -1,7 +1,7 @@
 const fs = require('fs');
 const utils = require('./utils');
 
-const initProject = (projectName, repo, branch, webhook, namespace) => {
+const initProject = (projectName, repo, branch, webhook, namespace, slackWebhookUrl) => {
   const projectPath = utils.getProjectPath(projectName, branch);
 
   if (fs.existsSync(projectPath)) {
@@ -18,15 +18,15 @@ const initProject = (projectName, repo, branch, webhook, namespace) => {
   utils.logData(`Checkouting to ${branch}`);
   utils.execOrThrow(gitCheckoutCommand, gitCheckoutError);
 
-  utils.writeToJson('./servers-list.json', projectName, branch, webhook, namespace);
+  utils.writeToJson('./servers-list.json', projectName, branch, webhook, namespace, slackWebhookUrl);
   utils.logSuccess('Project has been initialized!');
 };
 
 const run = () => {
   const args = process.argv;
 
-  if (args.length !== 7) {
-    const msg = 'Usage: node init-project.js repoName repoUrl repoBranch webhookUrl namespace';
+  if (args.length !== 8) {
+    const msg = 'Usage: node init-project.js repoName repoUrl repoBranch webhookUrl namespace slackWebhookUrl';
     return utils.logError(msg);
   }
 
