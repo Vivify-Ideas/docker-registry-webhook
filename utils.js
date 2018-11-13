@@ -97,6 +97,9 @@ const getProjectPath = (name, branch) => `${require('os').homedir()}/${name}-${b
 const isEmptyObj = (obj) => Object.keys(obj).length === 0;
 
 const notifySlack = (webhookUrl, text) => {
+  if (!webhookUrl) {
+    return;
+  }
   const webhook = new IncomingWebhook(webhookUrl);
   return new Promise((resolve, reject) =>
     webhook.send(text, (err, res) => err ? reject(err) : resolve(res)));
