@@ -6,6 +6,7 @@ const notifier = require('./../modules/notifier');
 
 const processWebhook = (webhookPayload, res) => {
   utils.logData('Starting webhook processing..');
+  webhookPayload.repositoryName = webhookPayload.repositoryName.toLowerCase();
   const project = utils.getProjectByName(webhookPayload.repositoryName);
   const projectPath = utils.getProjectPath(
     webhookPayload.repositoryName,
