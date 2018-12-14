@@ -47,7 +47,7 @@ const execOrThrow = (command, errorMessage) => {
   return output;
 };
 
-const writeToJson = (jsonFile, projectName, branch, webhook, namespace) => {
+const writeToJson = (jsonFile, projectName, branch, webhook, namespace, slackWebhookUrl) => {
   if (getProjectByName(projectName)) {
     return addBranchToServerList(jsonFile, projectName, branch, webhook);
   }
@@ -55,7 +55,8 @@ const writeToJson = (jsonFile, projectName, branch, webhook, namespace) => {
   const obj = {
     projectName,
     namespace,
-    branches: {}
+    branches: {},
+    slackWebhookUrl
   };
 
   obj.branches[`${branch}`] = webhook;
