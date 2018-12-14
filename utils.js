@@ -1,6 +1,8 @@
 const exec = require('child_process');
 const fs = require('fs');
-const { IncomingWebhook } = require('@slack/client');
+const {
+  IncomingWebhook
+} = require('@slack/client');
 
 const serversList = require('./servers-list.json');
 
@@ -76,17 +78,17 @@ const addBranchToServerList = (jsonFile, project, branch, webhook) => {
 };
 
 const getGitServiceFromUrl = (url) => {
-  return url.includes('https://')
-    ? url
-        .split('://')
-        .pop()
-        .split('/')
-        .shift()
-    : url
-        .split('git@')
-        .pop()
-        .split(':')
-        .shift();
+  return url.includes('https://') ?
+    url
+    .split('://')
+    .pop()
+    .split('/')
+    .shift() :
+    url
+    .split('git@')
+    .pop()
+    .split(':')
+    .shift();
 };
 
 const getProjectByName = (name) => serversList.find((p) => p.projectName === name);
@@ -101,8 +103,7 @@ const notifySlack = (webhookUrl, text) => {
   }
   const webhook = new IncomingWebhook(webhookUrl);
   return new Promise((resolve, reject) =>
-    webhook.send(text, (err, res) => (err ? reject(err) : resolve(res)))
-  );
+    webhook.send(text, (err, res) => err ? reject(err) : resolve(res)));
 };
 
 module.exports = {
