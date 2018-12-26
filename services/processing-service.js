@@ -1,10 +1,10 @@
 const fs = require('fs');
 const utils = require('./../utils');
-const serversList = require('./../servers-list.json');
 const worker = require('./../modules/worker');
 const notifier = require('./../modules/notifier');
+const { Logger } = require('./../loggers/socket-console-logger');
 
-const processWebhook = (webhookPayload, res) => {
+const processWebhook = (webhookPayload, endCallback = () => {}) => {
   utils.logData('Starting webhook processing..');
   webhookPayload.repositoryName = webhookPayload.repositoryName.toLowerCase();
   const project = utils.getProjectByName(webhookPayload.repositoryName);
@@ -25,7 +25,8 @@ const processWebhook = (webhookPayload, res) => {
         'Dockerfile',
         webhookPayload.repositoryName,
         webhookPayload.repositoryBranch,
-        project.slackWebhookUrl
+        project.slackWebhookUrl,
+        new Logger(project.projectName, project.namespace)
       )
       .then((output) => {
         const msg = 'Webhook has been processed.';
@@ -35,11 +36,11 @@ const processWebhook = (webhookPayload, res) => {
           [output.dockerImageName],
           project.branches[`${webhookPayload.repositoryBranch}`]
         );
-        res.end(msg);
+        endCallback(msg);
       })
       .catch((err) => {
         utils.logError(`Error while processing webhook. ${err.toString()}`);
-        res.end(err.toString());
+        endCallback(err.toString())
       });
   }
 
@@ -53,6 +54,7 @@ const processWebhook = (webhookPayload, res) => {
         webhookPayload.repositoryName,
         webhookPayload.repositoryBranch,
         project.slackWebhookUrl,
+        new Logger(project.projectName, project.namespace),
         dockerFile.suffix
       )
     )
@@ -65,11 +67,11 @@ const processWebhook = (webhookPayload, res) => {
       output.forEach((i) => images.push(i.dockerImageName));
       notifier.notify(project, images, project.branches[`${webhookPayload.repositoryBranch}`]);
       utils.logSuccess(msg);
-      res.end(msg);
+      endCallback(msg);
     })
     .catch((err) => {
       utils.logError(`Error while processing webhook. ${err.toString()}`);
-      res.end(err.toString());
+      endCallback(err.toString())
     });
 };
 
