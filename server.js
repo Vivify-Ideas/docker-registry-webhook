@@ -19,7 +19,7 @@ const methodNotAllowed = (res) => {
 
 server.on('request', (req, res) => {
 
-  if (req.url.indexOf('socket.io')) {
+  if (req.url.indexOf('socket.io') !== -1) {
     return;
   }
 
