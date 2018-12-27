@@ -3,7 +3,7 @@ const spawn = require('child_process').spawn;
 const serversList = require('./../servers-list.json');
 const REGISTRY_URL = process.env.REGISTRY_URL || 'registry.vivifyideas.com';
 
-const execute = (projectPath, namespace, dockerFileName, repoName, branch, slackWebhookUrl, suffix = '') => {
+const execute = (projectPath, namespace, dockerFileName, repoName, branch, slackWebhookUrl, logger, suffix = '') => {
   return new Promise((resolve, reject) => {
     const dockerImageName =
       suffix === '' ? `${repoName}:${branch}` : `${repoName}-${suffix}:${branch}`;
@@ -21,11 +21,11 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch, slack
       });
 
       child.stderr.on('data', (data) => {
-        utils.logError(`STDERR: ${data.toString()}`);
+        logger.logError(`STDERR: ${data.toString()}`);
       });
 
       child.stdout.on('data', (data) => {
-        utils.logData(`STDOUT: ${data.toString()}`);
+        logger.logData(`STDOUT: ${data.toString()}`);
       });
 
       child.on('exit', (exitCode) => {
@@ -33,7 +33,7 @@ const execute = (projectPath, namespace, dockerFileName, repoName, branch, slack
         if (exitCode === 0) {
           const message = `Build Worker finished all commands successfully on image ${dockerImageName}.`;
           utils.notifySlack(slackWebhookUrl, message);
-          utils.logSuccess(message);
+          logger.logSuccess(message);
           return resolve({
             message,
             dockerImageName

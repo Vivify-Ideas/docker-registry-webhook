@@ -117,5 +117,6 @@ module.exports = {
   getProjectByName,
   getProjectPath,
   isEmptyObj,
-  notifySlack
+  notifySlack,
+  serversList
 };

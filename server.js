@@ -2,10 +2,12 @@ const http = require('http');
 const utils = require('./utils');
 const parserFactory = require('./parsers/parser-factory');
 const processingService = require('./services/processing-service');
+const { connectSockets } = require('./sockets');
 
 const PORT = process.env.PORT || 8089;
 const server = http.createServer();
 
+connectSockets(server);
 server.listen(PORT, () => {
   utils.logSuccess(`Dockerhub watcher is up on port ${PORT}.`);
 });
@@ -15,12 +17,12 @@ const methodNotAllowed = (res) => {
   return res.end('Only POST method is allowed.');
 };
 
-const malformedRequest = (res) => {
-  res.writeHead(400);
-  return res.end('Malformed request data.');
-};
-
 server.on('request', (req, res) => {
+
+  if (req.url.indexOf('socket.io')) {
+    return;
+  }
+
   if (req.method !== 'POST') {
     return methodNotAllowed(res);
   }
@@ -42,7 +44,9 @@ server.on('request', (req, res) => {
       const parser = utils.getGitServiceFromUrl(payload.repository.url);
       const parsedWebhookPayload = parserFactory.getParser(parser).parse(payload);
       utils.logSuccess('Parsed Webhook payload.');
-      processingService.processWebhook(parsedWebhookPayload, res);
+      processingService.processWebhook(parsedWebhookPayload, (msg) => {
+        res.end(msg);
+      });
     } catch (e) {
       utils.logError(e.toString());
       res.end(e.toString());
