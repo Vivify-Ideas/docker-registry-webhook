@@ -1,13 +1,24 @@
 const utils = require('./../utils');
 const { socketsServer } = require('./../sockets');
 
+const SEND_SOCKETS_IN_INTERVAL = 5000;
+
 module.exports.Logger = class {
   constructor(projectName, namespace) {
     this.channel = `/logs/${projectName}/${namespace}`;
+    this.sockets = [];
+    this.interval = setInterval(() => {
+      socketsServer.emit(this.channel, this.sockets);
+      this.sockets = [];
+    }, SEND_SOCKETS_IN_INTERVAL)
+  }
+
+  clear() {
+    clearInterval(this.interval);
   }
 
   logError(data) {
-    socketsServer.emit(this.channel, {
+    this.sockets.push({
       type: 'error',
       text: data
     });
@@ -15,7 +26,7 @@ module.exports.Logger = class {
   }
 
   logData(data) {
-    socketsServer.emit(this.channel, {
+    this.sockets.push({
       type: 'data',
       text: data
     });
@@ -23,7 +34,7 @@ module.exports.Logger = class {
   }
 
   logSuccess(data) {
-    socketsServer.emit(this.channel, {
+    this.sockets.push({
       type: 'success',
       text: data
     });

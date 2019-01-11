@@ -17,6 +17,8 @@ const processWebhook = (webhookPayload, endCallback = () => {}) => {
     throw new Error('Project with that name (or on that branch) does not exist.');
   }
 
+  const logger = new Logger(project.projectName, project.namespace);
+
   if (!project.dockerFiles) {
     return worker
       .execute(
@@ -26,7 +28,7 @@ const processWebhook = (webhookPayload, endCallback = () => {}) => {
         webhookPayload.repositoryName,
         webhookPayload.repositoryBranch,
         project.slackWebhookUrl,
-        new Logger(project.projectName, project.namespace)
+        logger
       )
       .then((output) => {
         const msg = 'Webhook has been processed.';
@@ -36,9 +38,11 @@ const processWebhook = (webhookPayload, endCallback = () => {}) => {
           [output.dockerImageName],
           project.branches[`${webhookPayload.repositoryBranch}`]
         );
+        logger.clear();
         endCallback(msg);
       })
       .catch((err) => {
+        logger.clear();
         utils.logError(`Error while processing webhook. ${err.toString()}`);
         endCallback(err.toString())
       });
@@ -54,7 +58,7 @@ const processWebhook = (webhookPayload, endCallback = () => {}) => {
         webhookPayload.repositoryName,
         webhookPayload.repositoryBranch,
         project.slackWebhookUrl,
-        new Logger(project.projectName, project.namespace),
+        logger,
         dockerFile.suffix
       )
     )
@@ -67,10 +71,12 @@ const processWebhook = (webhookPayload, endCallback = () => {}) => {
       output.forEach((i) => images.push(i.dockerImageName));
       notifier.notify(project, images, project.branches[`${webhookPayload.repositoryBranch}`]);
       utils.logSuccess(msg);
+      logger.clear();
       endCallback(msg);
     })
     .catch((err) => {
       utils.logError(`Error while processing webhook. ${err.toString()}`);
+      logger.clear();
       endCallback(err.toString())
     });
 };
