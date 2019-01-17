@@ -2,12 +2,12 @@
   "name": "docker-registry-webhook",
   "version": "1.0.0",
   "description": "Github Webhook handler for our custom docker registry.",
-  "main": "server.js",
+  "main": "bin/www",
   "repository": "git@github.com:vivifyideas/docker-registry-webhook.git",
   "author": "Aleksandar Babic <alekski64@icloud.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "./node_modules/nodemon/bin/nodemon.js --watch * ./bin/www"
+    "dev": "./node_modules/nodemon/bin/nodemon.js --inspect ./bin/www"
   },
   "devDependencies": {
     "nodemon": "^1.17.5",
