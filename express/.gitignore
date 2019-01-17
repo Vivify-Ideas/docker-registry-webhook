@@ -1,4 +1,4 @@
 node_modules
 servers-list.json
 yarn-error.log
-logs/*
+logs/*.log
