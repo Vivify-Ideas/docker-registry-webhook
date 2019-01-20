@@ -2,20 +2,27 @@
   "name": "docker-registry-webhook",
   "version": "1.0.0",
   "description": "Github Webhook handler for our custom docker registry.",
-  "main": "bin/www",
+  "main": "bin/www.ts",
   "repository": "git@github.com:vivifyideas/docker-registry-webhook.git",
   "author": "Aleksandar Babic <alekski64@icloud.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "./node_modules/nodemon/bin/nodemon.js --inspect ./bin/www"
+    "start": "ts-node bin/www.ts",
+    "dev": "./node_modules/nodemon/bin/nodemon.js"
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/node": "^10.12.18",
     "nodemon": "^1.17.5",
-    "prettier": "1.15.3"
+    "prettier": "1.15.3",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
   },
   "dependencies": {
     "@slack/client": "^4.8.0",
     "app-root-path": "^2.1.0",
+    "express": "^4.16.4",
     "socket.io": "^2.2.0",
     "winston": "^3.1.0"
   }
