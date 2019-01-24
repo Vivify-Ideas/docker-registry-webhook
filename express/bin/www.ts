@@ -3,6 +3,7 @@
 import http from 'http';
 import app from '../app';
 import logger from '../logger';
+import { connectSockets } from './../shared/sockets/index';
 
 /**
  * Normalize a port into a number, string, or false.
@@ -62,6 +63,7 @@ app.set('port', port);
 
 const server = http.createServer(app);
 
+connectSockets(server);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
