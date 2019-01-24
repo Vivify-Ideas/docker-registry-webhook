@@ -17,11 +17,13 @@
     "arrowParens": "always"
   },
   "devDependencies": {
+    "@types/socket.io": "^2.1.2",
     "nodemon": "^1.17.5",
     "prettier": "1.13.5"
   },
   "dependencies": {
     "@slack/client": "^4.8.0",
+    "body-parser": "^1.18.3",
     "socket.io": "^2.2.0"
   }
 }
