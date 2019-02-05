@@ -2,3 +2,7 @@ node_modules
 servers-list.json
 yarn-error.log
 logs/*.log
+data/*
+docker-compose.yml
+Dockerfile-node.Dockerfile
+.dockerignore

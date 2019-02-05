@@ -31,7 +31,7 @@ export class ProjectBuilderController {
           });
       } catch (e) {
         utils.logError(e.toString());
-        reject(e.toString());
+        reject(e);
       }
     })
   }

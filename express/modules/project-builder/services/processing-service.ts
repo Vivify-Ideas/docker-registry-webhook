@@ -65,7 +65,7 @@ const processWebhook = (webhookPayload: ParsedProject, worker: Worker, notifier:
     )
   );
 
-  Promise.all(workerPromises)
+  return Promise.all(workerPromises)
     .then((output) => {
       const msg = 'Webhook has been processed.';
       const images: string[] = [];
