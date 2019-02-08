@@ -12,7 +12,7 @@ declare global {
     }
     namespace SocketIO {
         export interface Server {
-            user?: UserToken
+            user: UserToken
         }
     }
 }

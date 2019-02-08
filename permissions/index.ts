@@ -1,6 +1,5 @@
 import { UserRepository } from './../modules/user';
 import { Project } from './../shared/typings/project';
-import utils from './../shared/utils';
 
 const userRepository = new UserRepository();
 

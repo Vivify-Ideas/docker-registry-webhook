@@ -2,28 +2,41 @@
   "name": "docker-registry-webhook",
   "version": "1.0.0",
   "description": "Github Webhook handler for our custom docker registry.",
-  "main": "server.js",
+  "main": "bin/www.ts",
   "repository": "git@github.com:vivifyideas/docker-registry-webhook.git",
   "author": "Aleksandar Babic <alekski64@icloud.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "./node_modules/nodemon/bin/nodemon.js server.js"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "bracketSpacing": true,
-    "singleQuote": true,
-    "semi": true,
-    "arrowParens": "always"
+    "start": "ts-node --files bin/www.ts",
+    "dev": "./node_modules/nodemon/bin/nodemon.js"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/cors": "^2.8.4",
+    "@types/express": "^4.16.1",
+    "@types/express-validator": "^3.0.0",
+    "@types/jsonwebtoken": "^8.3.0",
+    "@types/mongoose": "^5.3.10",
+    "@types/node": "^10.12.18",
     "@types/socket.io": "^2.1.2",
+    "@types/socketio-jwt": "^0.0.0",
     "nodemon": "^1.17.5",
-    "prettier": "1.13.5"
+    "prettier": "1.15.3",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.12.1",
+    "typescript": "^3.2.4"
   },
   "dependencies": {
     "@slack/client": "^4.8.0",
-    "body-parser": "^1.18.3",
-    "socket.io": "^2.2.0"
+    "app-root-path": "^2.1.0",
+    "bcrypt": "^3.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.6",
+    "socket.io": "^2.2.0",
+    "socketio-jwt": "^4.5.0",
+    "winston": "^3.1.0"
   }
 }
