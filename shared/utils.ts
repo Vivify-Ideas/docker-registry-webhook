@@ -4,8 +4,10 @@ import {
   IncomingWebhook
 } from'@slack/client';
 import { Project } from './typings/project';
+import path from 'path';
+import rootPath from 'app-root-path';
 
-const serversList: Project[] = require('./../servers-list.json');
+const serversList: Project[] = rootPath.require('servers-list.json');
 
 const logTimestamp = () => {
   return `[${new Date().toUTCString()}]`;

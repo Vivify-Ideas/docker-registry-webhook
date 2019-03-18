@@ -6,3 +6,4 @@ data/*
 docker-compose.yml
 Dockerfile-node.Dockerfile
 .dockerignore
+dist/*
