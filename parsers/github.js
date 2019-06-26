@@ -2,7 +2,9 @@ class GithubParser {
   constructor() {}
 
   parse(webhookPayload) {
-    const branch = webhookPayload.ref.split('/')[2];
+    const refParts = webhookPayload.ref.split('/');
+    const branch = refParts.splice(2, refParts.length).join('/');
+
     return {
       repositoryId: webhookPayload.repository.id,
       repositoryName: webhookPayload.repository.name,
